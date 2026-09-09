@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="cef_tutorial.vcxproj" />
+  <Project Path="cef_tutorial.vcxproj" Id="1eeedf17-380e-4acc-a3f7-50a05baea200" />
 </Solution>
