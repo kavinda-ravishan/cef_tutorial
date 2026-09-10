@@ -10,8 +10,20 @@ class NanoCefApp : public CefApp {
 	IMPLEMENT_REFCOUNTING(NanoCefApp);
 };
 
-class NanoCefClient : public CefClient {
+class NanoCefClient : public CefClient, public CefLifeSpanHandler {
 	IMPLEMENT_REFCOUNTING(NanoCefClient);
+
+public:
+	CefRefPtr<CefBrowser> GetBrowser() { return _p_browser; }
+
+	CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() override { return this; }
+
+	void OnAfterCreated(CefRefPtr<CefBrowser> p_browser) override {
+		_p_browser = p_browser;
+	}
+
+private:
+	CefRefPtr<CefBrowser> _p_browser;
 };
 
 CefRefPtr<NanoCefClient> g_p_client;
@@ -20,23 +32,47 @@ LRESULT CALLBACK BrowserWindowProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM
 	using namespace std::literals;
 	
 	switch (u_msg) {
-	case WM_CREATE: {
-		g_p_client = new NanoCefClient{};
+	case WM_CREATE: 
+		{
+			g_p_client = new NanoCefClient{};
 
-		RECT rect{};
-		GetClientRect(hwnd, &rect);
-		CefRect cef_rect{};
-		cef_rect.x = rect.left;
-		cef_rect.y = rect.top;
-		cef_rect.width = rect.right - rect.left;
-		cef_rect.height = rect.bottom - rect.top;
+			RECT rect{};
+			GetClientRect(hwnd, &rect);
+			CefRect cef_rect{};
+			cef_rect.x = rect.left;
+			cef_rect.y = rect.top;
+			cef_rect.width = rect.right - rect.left;
+			cef_rect.height = rect.bottom - rect.top;
 
-		CefWindowInfo info{};
-		info.SetAsChild(hwnd, cef_rect);
+			CefWindowInfo info{};
+			info.SetAsChild(hwnd, cef_rect);
 
-		CefBrowserHost::CreateBrowser(info, g_p_client, "https://youtube.com"s, {}, {}, {});
+			CefBrowserHost::CreateBrowser(info, g_p_client, "https://youtube.com"s, {}, {}, {});
+		}
 		break;
-	}
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	case WM_SIZE:
+		if (w_param != SIZE_MINIMIZED && g_p_client) {
+			if (auto p_browser = g_p_client->GetBrowser()) {
+				if (auto h_wnd_browser = p_browser->GetHost()->GetWindowHandle()) {
+					RECT rect{};
+					GetClientRect(hwnd, &rect);
+					SetWindowPos(h_wnd_browser, NULL, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
+				}
+			}
+		}
+		break;
+	case WM_ERASEBKGND:
+		if (g_p_client) {
+			if (auto p_browser = g_p_client->GetBrowser()) {
+				if (auto h_wnd_browser = p_browser->GetHost()->GetWindowHandle()) {
+					return 1;
+				}
+			}
+		}
+		break;
 	default:
 		break;
 	}
@@ -91,7 +127,8 @@ int WINAPI wWinMain(_In_ HINSTANCE h_instance, _In_opt_ HINSTANCE h_prev_instanc
 		DispatchMessageA(&msg);
 	}
 
+	g_p_client.reset();
 	CefShutdown();
 
-	return 0;
+	return (int)msg.wParam;
 }
