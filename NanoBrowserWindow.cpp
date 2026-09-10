@@ -23,7 +23,7 @@ LRESULT CALLBACK BrowserWindowProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM
 		CefWindowInfo info{};
 		info.SetAsChild(hwnd, cef_rect);
 
-		CefBrowserHost::CreateBrowser(info, g_p_client, "https://youtube.com"s, {}, {}, {});
+		CefBrowserHost::CreateBrowser(info, g_p_client, "http://disk/index.html"s, {}, {}, {});
 	}
 	break;
 	case WM_DESTROY:
