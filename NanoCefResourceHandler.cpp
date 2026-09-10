@@ -17,7 +17,7 @@ bool NanoCefResourceHandler::Open(
 
     CefURLParts url_parts{};
     CefParseURL(p_request->GetURL(), url_parts);
-    const auto path = std::filesystem::path{ CefString(&url_parts.path).ToString() }.relative_path();
+    const auto path = "dist" / std::filesystem::path{CefString(&url_parts.path).ToString()}.relative_path();
     
     _file_size = (int64_t)std::filesystem::file_size(path);
 

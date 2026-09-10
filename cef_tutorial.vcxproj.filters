@@ -52,8 +52,5 @@
     <None Include="NanoCefApp.hpp">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="index.html">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

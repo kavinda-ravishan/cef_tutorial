@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /third_party_libs
 /cef_cache
+/dist
