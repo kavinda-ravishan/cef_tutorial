@@ -23,8 +23,8 @@ LRESULT CALLBACK BrowserWindowProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM
 		CefWindowInfo info{};
 		info.SetAsChild(hwnd, cef_rect);
 
-		//CefBrowserHost::CreateBrowser(info, g_p_client, "http://disk/index.html"s, {}, {}, {});
-		CefBrowserHost::CreateBrowser(info, g_p_client, "http://localhost:5173"s, {}, {}, {});
+		CefBrowserHost::CreateBrowser(info, g_p_client, "http://disk/index.html"s, {}, {}, {});
+		//CefBrowserHost::CreateBrowser(info, g_p_client, "http://localhost:5173"s, {}, {}, {});
 	}
 	break;
 	case WM_DESTROY:

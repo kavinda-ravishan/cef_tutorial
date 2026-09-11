@@ -13,6 +13,7 @@ int WINAPI wWinMain(_In_ HINSTANCE h_instance, _In_opt_ HINSTANCE h_prev_instanc
 
 	CefSettings settings;
 	settings.multi_threaded_message_loop = true;
+	settings.no_sandbox = true;
 	CefString(&settings.cache_path).FromString((std::filesystem::current_path() / "cef_cache").string());
 
 	CefInitialize(main_args, settings, p_app, nullptr);
