@@ -47,7 +47,7 @@ const grandTotal = computed(() =>
     entries.value.reduce((sum, entry) => sum + entry.item.price * entry.quantity, 0)
 )
 
-const cef_func_ret_val = ref<string | null>(null)
+const cef_func_ret_val = ref('null')
 
 function callCefFunc() {
     interface NanoCefAPI {
