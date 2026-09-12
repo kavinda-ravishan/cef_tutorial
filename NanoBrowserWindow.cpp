@@ -1,5 +1,5 @@
 #include "NanoBrowserWindow.hpp"
-#include "NanoCefClien.hpp"
+#include "NanoCefClient.hpp"
 
 static CefRefPtr<NanoCefClient> g_p_client;
 static constexpr const char* g_wnd_class_name = "$client-window$";

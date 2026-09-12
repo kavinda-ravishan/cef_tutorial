@@ -154,14 +154,14 @@
     <ClCompile Include="NanoFileSchemeHandlerFactory.cpp" />
     <ClCompile Include="NanoBrowserWindow.cpp" />
     <ClCompile Include="NanoCefApp.cpp" />
-    <ClCompile Include="NanoCefClien.cpp" />
+    <ClCompile Include="NanoCefClient.cpp" />
     <ClCompile Include="NanoCefResourceHandler.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NanoFileSchemeHandlerFactory.hpp" />
     <ClInclude Include="NanoBrowserWindow.hpp" />
-    <ClInclude Include="NanoCefClien.hpp" />
+    <ClInclude Include="NanoCefClient.hpp" />
     <ClInclude Include="NanoCefResourceHandler.hpp" />
   </ItemGroup>
   <ItemGroup>

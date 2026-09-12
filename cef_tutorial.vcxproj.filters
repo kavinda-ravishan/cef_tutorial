@@ -21,7 +21,7 @@
     <ClCompile Include="NanoBrowserWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NanoCefClien.cpp">
+    <ClCompile Include="NanoCefClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NanoCefApp.cpp">
@@ -38,7 +38,7 @@
     <ClInclude Include="NanoBrowserWindow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NanoCefClien.hpp">
+    <ClInclude Include="NanoCefClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NanoFileSchemeHandlerFactory.hpp">
