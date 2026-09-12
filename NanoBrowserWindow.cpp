@@ -4,7 +4,7 @@
 static CefRefPtr<NanoCefClient> g_p_client;
 static constexpr const char* g_wnd_class_name = "$client-window$";
 
-LRESULT CALLBACK BrowserWindowProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM l_param) {
+static LRESULT CALLBACK BrowserWindowProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM l_param) {
 	using namespace std::literals;
 
 	switch (u_msg) {
