@@ -46,6 +46,27 @@ function removeItem(i: number) {
 const grandTotal = computed(() => 
     entries.value.reduce((sum, entry) => sum + entry.item.price * entry.quantity, 0)
 )
+
+const cef_func_ret_val = ref<string | null>(null)
+
+function callCefFunc() {
+    interface NanoCefAPI {
+        CefJSFunc(text: string): boolean;
+    }
+
+    const nanoCefApi = window as unknown as NanoCefAPI;
+
+    try {
+        const ret_val: boolean = nanoCefApi.CefJSFunc(" --- JS string --- ");
+        cef_func_ret_val.value = (ret_val ? 'YES' : 'NO')
+    } catch(error) {
+        if (error instanceof Error) {
+            cef_func_ret_val.value = error.message;
+        } else {
+            cef_func_ret_val.value = String(error);
+        }
+    }
+}
 </script>
 
 <template>
@@ -103,6 +124,10 @@ const grandTotal = computed(() =>
                 </v-card>
                 <div class="d-flex justify-end">
                     <v-btn icon="mdi-plus" color="purple" @click="addItem"></v-btn>
+                </div>
+                <div class="d-flex">
+                    <v-btn color="purple" @click="callCefFunc">Call CEF function</v-btn>
+                    <p class="ml-5">CEF Function Return Value : {{ cef_func_ret_val }}</p>
                 </div>
             </v-container>
         </v-main>
