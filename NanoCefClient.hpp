@@ -11,6 +11,10 @@ public:
 
 	void OnAfterCreated(CefRefPtr<CefBrowser> p_browser) override;
 
+	void OnBeforeClose(CefRefPtr<CefBrowser> p_browser) override;
+
+	bool IsBrowserClosed() const;
 private:
 	CefRefPtr<CefBrowser> _p_browser;
+	bool _browser_closed = false;
 };

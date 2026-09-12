@@ -27,6 +27,11 @@ LRESULT CALLBACK BrowserWindowProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM
 		//CefBrowserHost::CreateBrowser(info, g_p_client, "http://localhost:5173"s, {}, {}, {});
 	}
 	break;
+	case WM_CLOSE:
+		if (g_p_client && g_p_client->GetBrowser()) {
+			g_p_client->GetBrowser()->GetHost()->CloseBrowser(false);
+		}
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
@@ -87,6 +92,12 @@ HWND CreateBrowserWindow(HINSTANCE h_instance) {
 }
 
 void CleanupBrowserWindow(HINSTANCE h_instance) {
+	if (g_p_client) {
+		while (!g_p_client->IsBrowserClosed()) {
+			Sleep(10);
+		}
+	}
+
 	g_p_client.reset();
 	UnregisterClassA(g_wnd_class_name, h_instance);
 }

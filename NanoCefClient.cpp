@@ -7,3 +7,10 @@ CefRefPtr<CefLifeSpanHandler> NanoCefClient::GetLifeSpanHandler() { return this;
 void NanoCefClient::OnAfterCreated(CefRefPtr<CefBrowser> p_browser) {
 	_p_browser = p_browser;
 }
+
+void NanoCefClient::OnBeforeClose(CefRefPtr<CefBrowser> p_browser) {
+    _p_browser.reset();
+    _browser_closed = true;
+}
+
+bool NanoCefClient::IsBrowserClosed() const { return _browser_closed; }
