@@ -84,11 +84,20 @@ function callCefAsyncFunc() {
 
     const nanoCefApi = window as unknown as NanoCefAPI;
 
+    try {
     nanoCefApi.AsyncCefJSFunc(
         " --- JS string --- ", 
         (result: boolean) => { cef_async_func_ret_val.value = result ? "YES" : "NO" }, 
         (errorMessage: string) => { cef_async_func_ret_val.value = errorMessage }
     );
+    } catch(error) {
+        if (error instanceof Error) {
+            cef_async_func_ret_val.value = error.message;
+        } else {
+            cef_async_func_ret_val.value = String(error);
+        }
+    }
+
 }
 
 </script>
@@ -145,18 +154,20 @@ function callCefAsyncFunc() {
                             <p class="price">${{ grandTotal.toFixed(2) }}</p>
                         </v-col>
                     </v-row>
+                    <div class="d-flex justify-end ma-5">
+                        <v-btn icon="mdi-plus" color="purple" @click="addItem"></v-btn>
+                    </div>
                 </v-card>
-                <div class="d-flex justify-end">
-                    <v-btn icon="mdi-plus" color="purple" @click="addItem"></v-btn>
-                </div>
-                <div class="d-flex">
-                    <v-btn color="purple" @click="callCefSyncFunc">Call CEF Sync Function</v-btn>
-                    <p class="ml-5">CEF Sync Function Return Value : {{ cef_sync_func_ret_val }}</p>
-                </div>
-                <div class="d-flex">
-                    <v-btn color="purple" @click="callCefAsyncFunc">Call CEF Async Function</v-btn>
-                    <p class="ml-5">CEF Async Function Return Value : {{ cef_async_func_ret_val }}</p>
-                </div>
+                <v-card class="mb-3 pa-3 pt-5">
+                    <div class="d-flex align-center">
+                        <v-btn color="purple" @click="callCefSyncFunc">Call CEF Sync Function</v-btn>
+                        <p class="ml-5">CEF Sync Function Return Value : {{ cef_sync_func_ret_val }}</p>
+                    </div>
+                    <div class="d-flex align-center">
+                        <v-btn color="purple" @click="callCefAsyncFunc">Call CEF Async Function</v-btn>
+                        <p class="ml-5">CEF Async Function Return Value : {{ cef_async_func_ret_val }}</p>
+                    </div>
+                </v-card>
             </v-container>
         </v-main>
     </v-app>
