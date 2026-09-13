@@ -55,6 +55,8 @@ function callCefSyncFunc() {
         SyncCefJSFunc(text: string): boolean;
     }
 
+    console.log('Cef Sync Function called')
+
     const nanoCefApi = window as unknown as NanoCefAPI;
 
     try {
@@ -77,6 +79,8 @@ function callCefAsyncFunc() {
             rejectFunc: (errorMessage: string) => void, 
         ): void;
     }
+
+    console.log('Cef Async Function called')
 
     const nanoCefApi = window as unknown as NanoCefAPI;
 

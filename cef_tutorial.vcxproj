@@ -116,7 +116,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\third_party_libs\cef_152\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\third_party_libs\cef_152\build\libcef_dll_wrapper\Debug\;$(SolutionDir)\third_party_libs\cef_152\Release\</AdditionalLibraryDirectories>
       <AdditionalDependencies>libcef_dll_wrapper.lib;libcef.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -140,7 +140,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\third_party_libs\cef_152\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\third_party_libs\cef_152\build\libcef_dll_wrapper\Release\;$(SolutionDir)\third_party_libs\cef_152\Release\</AdditionalLibraryDirectories>
       <AdditionalDependencies>libcef_dll_wrapper.lib;libcef.lib;%(AdditionalDependencies)</AdditionalDependencies>

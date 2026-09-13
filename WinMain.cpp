@@ -2,7 +2,9 @@
 #include "NanoBrowserWindow.hpp"
 #include "NanoCefApp.hpp"
 
-int WINAPI wWinMain(_In_ HINSTANCE h_instance, _In_opt_ HINSTANCE h_prev_instance, _In_ PWSTR p_cmd_line, _In_ int n_cmd_show) {
+int main() {
+
+	const auto h_instance = GetModuleHandle(NULL);
 
 	const CefMainArgs main_args{ h_instance };
 	CefRefPtr<NanoCefApp> p_app = new NanoCefApp{};

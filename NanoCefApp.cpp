@@ -33,6 +33,8 @@ bool NanoCefApp::Execute(const CefString& name, CefRefPtr<CefV8Value> p_object, 
 }
 
 void NanoCefApp::SyncCefJSFunc(const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& p_retval, CefString& exception) {
+	std::printf("AsyncCefJSFunc called\n");
+
 	const std::string msg_box_txt = arguments[0]->GetStringValue().ToString();
 	const int ret = MessageBoxA(nullptr, msg_box_txt.c_str(), "Sync CEF Function Called from JS side", MB_SYSTEMMODAL | MB_ICONINFORMATION | MB_YESNOCANCEL);
 
@@ -52,10 +54,11 @@ void NanoCefApp::SyncCefJSFunc(const CefV8ValueList& arguments, CefRefPtr<CefV8V
 	}
 
 	p_retval = CefV8Value::CreateBool(ret_val);
+
+	std::printf("AsyncCefJSFunc ended\n");
 }
 
 void NanoCefApp::AsyncCefJSFunc(const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& p_retval, CefString& exception) {
-	
 	const auto invocation_id = _next_invocation_id++;
 	_Invocation& invocation = _invocations[invocation_id];
 
@@ -66,12 +69,16 @@ void NanoCefApp::AsyncCefJSFunc(const CefV8ValueList& arguments, CefRefPtr<CefV8
 	invocation.p_v8_context = CefV8Context::GetCurrentContext();
 
 	invocation.task = std::async([this, msg_box_txt, invocation_id]() {
+		std::printf("AsyncCefJSFunc's async task %u started\n", invocation_id);
+
 		const int msg_box_ret_val = 
 			MessageBoxA(
 				nullptr, msg_box_txt.c_str(), "Async CEF Function Called from JS side", MB_SYSTEMMODAL | MB_ICONINFORMATION | MB_YESNOCANCEL
 			);
 		
 		CefPostTask(TID_RENDERER, base::BindOnce(&NanoCefApp::ResolveAsyncCef, this, msg_box_ret_val, invocation_id));
+
+		std::printf("AsyncCefJSFunc's async task %u ended\n", invocation_id);
 	});
 }
 
