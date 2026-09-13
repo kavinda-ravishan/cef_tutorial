@@ -47,26 +47,46 @@ const grandTotal = computed(() =>
     entries.value.reduce((sum, entry) => sum + entry.item.price * entry.quantity, 0)
 )
 
-const cef_func_ret_val = ref('null')
+const cef_sync_func_ret_val = ref('null')
+const cef_async_func_ret_val = ref('null')
 
-function callCefFunc() {
+function callCefSyncFunc() {
     interface NanoCefAPI {
-        CefJSFunc(text: string): boolean;
+        SyncCefJSFunc(text: string): boolean;
     }
 
     const nanoCefApi = window as unknown as NanoCefAPI;
 
     try {
-        const ret_val: boolean = nanoCefApi.CefJSFunc(" --- JS string --- ");
-        cef_func_ret_val.value = (ret_val ? 'YES' : 'NO')
+        const ret_val: boolean = nanoCefApi.SyncCefJSFunc(" --- JS Sync string --- ");
+        cef_sync_func_ret_val.value = (ret_val ? 'YES' : 'NO')
     } catch(error) {
         if (error instanceof Error) {
-            cef_func_ret_val.value = error.message;
+            cef_sync_func_ret_val.value = error.message;
         } else {
-            cef_func_ret_val.value = String(error);
+            cef_sync_func_ret_val.value = String(error);
         }
     }
 }
+
+function callCefAsyncFunc() {
+    interface NanoCefAPI {
+        AsyncCefJSFunc(
+            text: string, 
+            acceptFunc: (result: boolean) => void, 
+            rejectFunc: (errorMessage: string) => void, 
+        ): void;
+    }
+
+    const nanoCefApi = window as unknown as NanoCefAPI;
+
+    nanoCefApi.AsyncCefJSFunc(
+        " --- JS string --- ", 
+        (result: boolean) => { cef_async_func_ret_val.value = result ? "YES" : "NO" }, 
+        (errorMessage: string) => { cef_async_func_ret_val.value = errorMessage }
+    );
+}
+
 </script>
 
 <template>
@@ -126,8 +146,12 @@ function callCefFunc() {
                     <v-btn icon="mdi-plus" color="purple" @click="addItem"></v-btn>
                 </div>
                 <div class="d-flex">
-                    <v-btn color="purple" @click="callCefFunc">Call CEF function</v-btn>
-                    <p class="ml-5">CEF Function Return Value : {{ cef_func_ret_val }}</p>
+                    <v-btn color="purple" @click="callCefSyncFunc">Call CEF Sync Function</v-btn>
+                    <p class="ml-5">CEF Sync Function Return Value : {{ cef_sync_func_ret_val }}</p>
+                </div>
+                <div class="d-flex">
+                    <v-btn color="purple" @click="callCefAsyncFunc">Call CEF Async Function</v-btn>
+                    <p class="ml-5">CEF Async Function Return Value : {{ cef_async_func_ret_val }}</p>
                 </div>
             </v-container>
         </v-main>
