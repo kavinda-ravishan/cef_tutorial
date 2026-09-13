@@ -40,6 +40,7 @@ public:
 private:
 	const CefString _sync_func_name{ "SyncCefJSFunc" };
 	const CefString _async_func_name{ "AsyncCefJSFunc" };
+	const CefString _power_level_func_name{ "CefPowerLevel" };
 
 	uint32_t _next_invocation_id{ 0 };
 	std::unordered_map<uint32_t, _Invocation> _invocations{};

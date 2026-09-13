@@ -100,14 +100,70 @@ function callCefAsyncFunc() {
 
 }
 
+const powerLevel = ref<number | null>(null)
+const powerLevelNorm = computed(() => powerLevel.value ?? 0)
+const inProgess = ref<boolean>(true)
+
+function adjustPowerLevel() {
+    interface NanoCefAPI {
+        CefPowerLevel(
+            text: string, 
+            acceptFunc: (result: boolean) => void, 
+            rejectFunc: (errorMessage: string) => void, 
+        ): void;
+    }
+
+    const nanoCefApi = window as unknown as NanoCefAPI;
+
+    inProgess.value = true
+    powerLevel.value = 0
+
+    // nanoCefApi.CefPowerLevel(
+    //     "Question 1",
+    //     btn => { 
+    //         powerLevel.value = btn ? <number>powerLevel.value + 1 : <number>powerLevel.value 
+    //         nanoCefApi.CefPowerLevel(
+    //             "Question 2",
+    //             btn => { 
+    //                 powerLevel.value = btn ? <number>powerLevel.value + 1 : <number>powerLevel.value 
+    //                 nanoCefApi.CefPowerLevel(
+    //                     "Question 3",
+    //                     btn => { 
+    //                         powerLevel.value = btn ? <number>powerLevel.value + 1 : <number>powerLevel.value 
+    //                         inProgess.value = false
+    //                     }, 
+    //                     msg => { inProgess.value = false; powerLevel.value = null }
+    //                 )
+    //             }, 
+    //             msg => { inProgess.value = false; powerLevel.value = null }
+    //         )
+    //     }, 
+    //     msg => { inProgess.value = false; powerLevel.value = null }
+    // )
+
+    function powerLevelPromise(text: string): Promise<boolean> {
+        return new Promise<boolean>((accept, reject) => {nanoCefApi.CefPowerLevel(text, accept, reject)})
+    }
+
+    function quest(text: string): Promise<void> {
+        return powerLevelPromise(text).then((btn) => { powerLevel.value = btn ? <number>powerLevel.value + 1 : <number>powerLevel.value })
+    }
+
+    quest("Question 1")
+    .then(() => quest("Question 2"))
+    .then(() => quest("Question 3"))
+    .catch(() => {powerLevel.value = null})
+    .finally(() => {inProgess.value = false})
+}
+
 </script>
 
 <template>
     <v-app>
         <v-main>
             <v-container width="1024">
-                <h2 class="mb-2 ml-4">My Shopping Cart</h2>
-                <v-card class="mb-3 pa-3 pt-5">
+                <v-card class="mb-3 pa-3">
+                    <h2 class="mb-2 ml-4">My Shopping Cart</h2>
                     <v-row v-for="(entry, i) in entries" align="center">
                         <v-col cols="1">
                             <v-btn 
@@ -158,7 +214,8 @@ function callCefAsyncFunc() {
                         <v-btn icon="mdi-plus" color="purple" @click="addItem"></v-btn>
                     </div>
                 </v-card>
-                <v-card class="mb-3 pa-3 pt-5">
+                <v-card class="mb-3 pa-3">
+                    <h2 class="mb-2 ml-4">Call CEF C++ functions from JS</h2>
                     <div class="d-flex align-center">
                         <v-btn color="purple" @click="callCefSyncFunc">Call CEF Sync Function</v-btn>
                         <p class="ml-5">CEF Sync Function Return Value : {{ cef_sync_func_ret_val }}</p>
@@ -166,6 +223,21 @@ function callCefAsyncFunc() {
                     <div class="d-flex align-center">
                         <v-btn color="purple" @click="callCefAsyncFunc">Call CEF Async Function</v-btn>
                         <p class="ml-5">CEF Async Function Return Value : {{ cef_async_func_ret_val }}</p>
+                    </div>
+                </v-card>
+                <v-card title="Power Level" class="mb-3 pa-3">
+                    <v-progress-linear
+                        v-model="powerLevelNorm"
+                        height="20"
+                        color="blue-darken-3"
+                        :indeterminate="powerLevel === null"
+                        :stream="inProgess"
+                        rounded
+                        max="3"
+                    >
+                    </v-progress-linear>
+                    <div class="d-flex justify-center mt-10 mb-5">
+                        <v-btn color="purple" size="x-large" @click="adjustPowerLevel">Adjust Power Level</v-btn>
                     </div>
                 </v-card>
             </v-container>

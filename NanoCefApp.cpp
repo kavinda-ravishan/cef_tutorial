@@ -18,14 +18,16 @@ void NanoCefApp::OnContextInitialized() {
 void NanoCefApp::OnContextCreated(CefRefPtr<CefBrowser> p_browser, CefRefPtr<CefFrame> p_frame, CefRefPtr<CefV8Context> p_v8_context) {
 	p_v8_context->GetGlobal()->SetValue(_sync_func_name, CefV8Value::CreateFunction(_sync_func_name, this), V8_PROPERTY_ATTRIBUTE_NONE);
 	p_v8_context->GetGlobal()->SetValue(_async_func_name, CefV8Value::CreateFunction(_async_func_name, this), V8_PROPERTY_ATTRIBUTE_NONE);
+	p_v8_context->GetGlobal()->SetValue(_power_level_func_name, CefV8Value::CreateFunction(_power_level_func_name, this), V8_PROPERTY_ATTRIBUTE_NONE);
 }
 
 bool NanoCefApp::Execute(const CefString& name, CefRefPtr<CefV8Value> p_object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& p_retval, CefString& exception) {
 
 	if (name == _sync_func_name) {
 		SyncCefJSFunc(arguments, p_retval, exception);
-	}
-	else if (name == _async_func_name) {
+	} else if (name == _async_func_name) {
+		AsyncCefJSFunc(arguments, p_retval, exception);
+	} else if (name == _power_level_func_name) {
 		AsyncCefJSFunc(arguments, p_retval, exception);
 	}
 
