@@ -104,7 +104,7 @@ const powerLevel = ref<number | null>(null)
 const powerLevelNorm = computed(() => powerLevel.value ?? 0)
 const inProgess = ref<boolean>(true)
 
-function adjustPowerLevel() {
+async function adjustPowerLevel() {
     interface NanoCefAPI {
         CefPowerLevel(
             text: string, 
@@ -118,6 +118,7 @@ function adjustPowerLevel() {
     inProgess.value = true
     powerLevel.value = 0
 
+    // Method 1
     // nanoCefApi.CefPowerLevel(
     //     "Question 1",
     //     btn => { 
@@ -141,19 +142,40 @@ function adjustPowerLevel() {
     //     msg => { inProgess.value = false; powerLevel.value = null }
     // )
 
+    // Method 2
+    // function powerLevelPromise(text: string): Promise<boolean> {
+    //     return new Promise<boolean>((accept, reject) => {nanoCefApi.CefPowerLevel(text, accept, reject)})
+    // }
+
+    // function quest(text: string): Promise<void> {
+    //     return powerLevelPromise(text).then((btn) => { powerLevel.value = btn ? <number>powerLevel.value + 1 : <number>powerLevel.value })
+    // }
+
+    // quest("Question 1")
+    // .then(() => quest("Question 2"))
+    // .then(() => quest("Question 3"))
+    // .catch(() => {powerLevel.value = null})
+    // .finally(() => {inProgess.value = false})
+
+    // Method 3
     function powerLevelPromise(text: string): Promise<boolean> {
         return new Promise<boolean>((accept, reject) => {nanoCefApi.CefPowerLevel(text, accept, reject)})
     }
 
-    function quest(text: string): Promise<void> {
-        return powerLevelPromise(text).then((btn) => { powerLevel.value = btn ? <number>powerLevel.value + 1 : <number>powerLevel.value })
+    async function quest(text: string): Promise<void> {
+        powerLevel.value = await powerLevelPromise(text) ? <number>powerLevel.value + 1 : <number>powerLevel.value 
     }
 
-    quest("Question 1")
-    .then(() => quest("Question 2"))
-    .then(() => quest("Question 3"))
-    .catch(() => {powerLevel.value = null})
-    .finally(() => {inProgess.value = false})
+    try {
+        await quest("Question 1")
+        await quest("Question 2")
+        await quest("Question 3")
+    } catch {
+        powerLevel.value = null
+    }
+    finally {
+        inProgess.value = false
+    }
 }
 
 </script>
